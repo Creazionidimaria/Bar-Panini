@@ -184,37 +184,72 @@ input[type=number] { width:60px; padding:6px; border-radius:6px; border:1px soli
 </div>
 
 <script>
-let cart=[]; let totalCash=0; let totalSatispay=0;
-function formatMoney(v){ return v.toFixed(2).replace('.',',')+' €'; }
+let cart=[]; 
+let totalCash=0; 
+let totalSatispay=0;
+
+function formatMoney(v){
+  return v.toFixed(2).replace('.',',')+' €';
+}
 
 function renderCart(){
-  const cartItems=document.getElementById('cartItems'); cartItems.innerHTML='';
-  let grouped={}; cart.forEach(item=>{
+  const cartItems=document.getElementById('cartItems'); 
+  cartItems.innerHTML='';
+  let grouped={}; 
+
+  cart.forEach(item=>{
     const key=item.name+(item.meta?item.meta.join(','):'' );
     if(grouped[key]) grouped[key].qty+=item.qty;
     else grouped[key]={...item};
   });
+
   Object.values(grouped).forEach(item=>{
-    const div=document.createElement('div'); div.className='item-row';
-    div.innerHTML=`${item.qty} x ${item.name}${item.meta? ' ('+item.meta.join(', ')+')':''} - ${formatMoney(item.price*item.qty)}
-      <button onclick="removeItem('${item.name}','${item.meta?item.meta.join(','):""}')" class="btn" style="padding:2px 6px; margin-left:5px;">✖</button>`;
+    const div=document.createElement('div'); 
+    div.className='item-row';
+    div.innerHTML=`
+      ${item.qty} x ${item.name}${item.meta? ' ('+item.meta.join(', ')+')':''} - ${formatMoney(item.price*item.qty)}
+      <button onclick="removeItem('${item.name}','${item.meta?item.meta.join(','):""}')" 
+              class="btn" style="padding:2px 6px; margin-left:5px;">✖</button>`;
     cartItems.appendChild(div);
   });
-  document.getElementById('totalAmount').innerText=formatMoney(cart.reduce((a,b)=>a+b.price*b.qty,0));
+
+  document.getElementById('totalAmount').innerText=
+    formatMoney(cart.reduce((a,b)=>a+b.price*b.qty,0));
+
   updateReceipt();
 }
 
-function addToCart(item){ cart.push(item); renderCart(); }
-function removeItem(name,meta){ for(let i=0;i<cart.length;i++){ const item=cart[i]; if(item.name===name && ((item.meta?item.meta.join(','):'')===meta)){ cart.splice(i,1); break;} } renderCart(); }
-function clearCart(){ cart=[]; renderCart(); }
+function addToCart(item){
+  cart.push(item);
+  renderCart();
+}
+
+function removeItem(name,meta){
+  for(let i=0;i<cart.length;i++){
+    const item=cart[i];
+    if(item.name===name && ((item.meta?item.meta.join(','):'')===meta)){
+      cart.splice(i,1);
+      break;
+    }
+  }
+  renderCart();
+}
+
+function clearCart(){
+  cart=[];
+  renderCart();
+}
 
 function updateReceipt(){
   let text='BAR & PANINI\n📍 Cuneo, Piccapietra\n-----------------------------\n';
   let grouped={};
+
   cart.forEach(item=>{
     const key=item.name+(item.meta?item.meta.join(','):'' );
-    if(grouped[key]) grouped[key].qty+=item.qty; else grouped[key]={...item};
+    if(grouped[key]) grouped[key].qty+=item.qty; 
+    else grouped[key]={...item};
   });
+
   Object.values(grouped).forEach(item=>{
     if(item.name.toLowerCase().includes('birra') && item.qty>=10){
       text+=item.qty+' x '+item.name+' cumulabili\n';
@@ -224,7 +259,9 @@ function updateReceipt(){
     if(item.meta) text+=item.meta.join(', ')+'\n';
     text+='  '+formatMoney(item.price*item.qty)+'\n';
   });
+
   text+='-----------------------------\nTotale: '+formatMoney(cart.reduce((a,b)=>a+b.price*b.qty,0))+'\n';
+
   document.getElementById('receiptPreview').innerText=text;
 }
 
@@ -245,13 +282,20 @@ const addPanBtn=document.getElementById('addPanBtn');
 const closePanBtn=document.getElementById('closePanBtn');
 const completePanBtn=document.getElementById('completePanBtn');
 
-personalizzaBtn.addEventListener('click',()=>{panOptions.style.display='block';});
-closePanBtn.addEventListener('click',()=>{panOptions.style.display='none';});
+personalizzaBtn.addEventListener('click',()=>{
+  panOptions.style.display='block';
+});
+closePanBtn.addEventListener('click',()=>{
+  panOptions.style.display='none';
+});
+
 addPanBtn.addEventListener('click',()=>{
   const qty=parseInt(document.getElementById('panQty').value);
-  const meat=Array.from(document.querySelectorAll('#paninoOptions .chip[data-meat].selected')).map(x=>x.dataset.meat)[0];
+  const meat=Array.from(document.querySelectorAll('#paninoOptions .chip[data-meat].selected'))
+                  .map(x=>x.dataset.meat)[0];
   if(!meat){ alert('Seleziona il tipo di carne!'); return; }
-  const ingredients=Array.from(document.querySelectorAll('#paninoOptions .chip[data-ing].selected')).map(x=>x.dataset.ing);
+  const ingredients=Array.from(document.querySelectorAll('#paninoOptions .chip[data-ing].selected'))
+                        .map(x=>x.dataset.ing);
   const name='Panino '+meat;
   addToCart({name:name, price:6, qty:qty, meta:ingredients.length?ingredients:null});
   panOptions.style.display='none';
@@ -261,12 +305,15 @@ addPanBtn.addEventListener('click',()=>{
 
 completePanBtn.addEventListener('click',()=>{
   const qty=parseInt(document.getElementById('panQty').value);
-  const meat=Array.from(document.querySelectorAll('#paninoOptions .chip[data-meat].selected')).map(x=>x.dataset.meat)[0];
+  const meat=Array.from(document.querySelectorAll('#paninoOptions .chip[data-meat].selected'))
+                  .map(x=>x.dataset.meat)[0];
   if(!meat){ alert('Seleziona il tipo di carne!'); return; }
+
   let ingredients=[];
   if(meat==="Salamella") ingredients=["Crauti","Senape"];
   else if(meat==="Wurstel") ingredients=["Ketchup","Senape"];
   else if(meat==="Porchetta") ingredients=["Cipolle","Maionese"];
+
   const name='Panino '+meat+' (Completo)';
   addToCart({name:name, price:6, qty:qty, meta:ingredients});
   panOptions.style.display='none';
@@ -277,22 +324,42 @@ completePanBtn.addEventListener('click',()=>{
 // Selezione chip
 document.querySelectorAll('#paninoOptions .chip').forEach(c=>{
   c.addEventListener('click',()=>{
-    if(c.dataset.meat){document.querySelectorAll('#paninoOptions .chip[data-meat]').forEach(x=>x.classList.remove('selected')); c.classList.add('selected');}
-    else c.classList.toggle('selected');
+    if(c.dataset.meat){
+      document.querySelectorAll('#paninoOptions .chip[data-meat]')
+        .forEach(x=>x.classList.remove('selected'));
+      c.classList.add('selected');
+    } else {
+      c.classList.toggle('selected');
+    }
   });
 });
 
 // Tastiera numerica
-const numPad=document.getElementById('numPad'); const cashInput=document.getElementById('cashGiven');
-document.getElementById('showNumPad').addEventListener('click',()=>{numPad.style.display='block';});
-document.querySelectorAll('.numBtn').forEach(btn=>{btn.addEventListener('click',()=>{ cashInput.value+=(btn.innerText===','?'.':btn.innerText); });});
-document.getElementById('numClear').addEventListener('click',()=>{cashInput.value='';});
+const numPad=document.getElementById('numPad');
+const cashInput=document.getElementById('cashGiven');
+
+document.getElementById('showNumPad').addEventListener('click',()=>{
+  numPad.style.display='block';
+});
+
+document.querySelectorAll('.numBtn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    cashInput.value+=(btn.innerText===','?'.':btn.innerText);
+  });
+});
+
+document.getElementById('numClear').addEventListener('click',()=>{
+  cashInput.value='';
+});
+
 document.getElementById('numEnter').addEventListener('click',()=>{
   numPad.style.display='none';
   let cash=parseFloat(cashInput.value.replace(',', '.'))||0;
   const total=cart.reduce((a,b)=>a+b.price*b.qty,0);
   const change=cash-total;
-  if(change<0){alert('Soldi insufficienti!'); return;}
+
+  if(change<0){ alert('Soldi insufficienti!'); return; }
+
   document.getElementById('changeAmount').innerText=formatMoney(change);
 });
 
@@ -300,34 +367,69 @@ document.getElementById('numEnter').addEventListener('click',()=>{
 function stampaScontrino(metodo){
   let text='BAR & PANINI\n📍 Cuneo, Piccapietra\n-----------------------------\n';
   let grouped={};
+
   cart.forEach(item=>{
     const key=item.name+(item.meta?item.meta.join(','):'' );
-    if(grouped[key]) grouped[key].qty+=item.qty; else grouped[key]={...item};
+    if(grouped[key]) grouped[key].qty+=item.qty; 
+    else grouped[key]={...item};
   });
+
   Object.values(grouped).forEach(item=>{
     if(item.name.toLowerCase().includes('birra') && item.qty>=10){
       text+=item.qty+' x '+item.name+' cumulabili\n';
-    } else { text+=item.qty+' x '+item.name+'\n'; }
+    } else {
+      text+=item.qty+' x '+item.name+'\n';
+    }
     if(item.meta) text+=item.meta.join(', ')+'\n';
     text+='  '+formatMoney(item.price*item.qty)+'\n';
   });
+
   let total=cart.reduce((a,b)=>a+b.price*b.qty,0);
   text+='-----------------------------\nTotale: '+formatMoney(total)+'\nPagamento: '+metodo.toUpperCase()+'\n\nGrazie e Buon Torneo!\n';
+
   const win=window.open('','_blank','width=300,height=600');
   win.document.write('<pre style="font-family:monospace; font-size:12px; line-height:1.2;">'+text+'</pre>');
   win.document.close();
   win.print();
-  if(metodo==="contanti") totalCash+=total; else if(metodo==="satispay") totalSatispay+=total;
-  cart=[]; renderCart(); cashInput.value=''; document.getElementById('changeAmount').innerText=formatMoney(0);
+
+  if(metodo==="contanti") totalCash+=total; 
+  else if(metodo==="satispay") totalSatispay+=total;
+
+  cart=[]; 
+  renderCart(); 
+  cashInput.value=''; 
+  document.getElementById('changeAmount').innerText=formatMoney(0);
 }
 
 document.getElementById('printBtn').addEventListener('click',()=>stampaScontrino('contanti'));
 document.getElementById('paySatispay').addEventListener('click',()=>stampaScontrino('satispay'));
-document.getElementById('dayTotalBtn').addEventListener('click',()=>alert('Totale Contanti: '+formatMoney(totalCash)+'\nTotale Satispay: '+formatMoney(totalSatispay)));
+document.getElementById('dayTotalBtn').addEventListener('click',()=>{
+  alert('Totale Contanti: '+formatMoney(totalCash)+'\nTotale Satispay: '+formatMoney(totalSatispay));
+});
 
-// Reset
-document.getElementById('resetCash').addEventListener('click',()=>{ totalCash=0; alert('Totale contanti azzerato'); });
-document.getElementById('resetSatispay').addEventListener('click',()=>{ totalSatispay=0; alert('Totale Satispay azzerato'); });
+
+// ⭐⭐⭐ PIN DI SICUREZZA ⭐⭐⭐
+function askPin(callback){
+  const pin = prompt("Inserisci PIN per confermare il reset:");
+  if(pin === "1234") callback();
+  else alert("PIN errato!");
+}
+
+// Reset con PIN
+document.getElementById('resetCash').addEventListener('click',()=>{
+  askPin(()=>{
+    totalCash=0; 
+    alert('Totale contanti azzerato');
+  });
+});
+
+document.getElementById('resetSatispay').addEventListener('click',()=>{
+  askPin(()=>{
+    totalSatispay=0; 
+    alert('Totale Satispay azzerato');
+  });
+});
+
 document.getElementById('clearCartBtn').addEventListener('click',()=>{ clearCart(); });
 </script>
 
