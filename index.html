@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="it">
 <head>
 <meta charset="UTF-8">
@@ -25,17 +25,11 @@ input[type=number] { width:60px; padding:6px; border-radius:6px; border:1px soli
 #numPad button { width:60px;height:60px;margin:5px; font-size:1.3em; border-radius:10px; border:none; background:#ff6b35;color:#fff; cursor:pointer; }
 #numPad button:hover { background:#ff4f10; }
 .reset-section { display:flex; flex-direction:column; gap:5px; position:absolute; bottom:20px; right:20px; }
-/* iPad orizzontale */
-@media only screen and (max-width: 1024px) and (min-width: 768px) and (orientation: landscape) {
-  .reset-section {
-    position: static;      /* togliamo bottom/right */
-    flex-direction: row;   /* fila orizzontale */
-    justify-content: flex-start;
-    gap: 10px;
-    margin-top: 15px;
-  }
-}
 
+/* MEDIA QUERY PER iPAD ORIZZONTALE */
+@media (max-width:1024px) {
+  .reset-section { position:static; flex-direction:row; justify-content:space-between; margin-top:15px; }
+}
 </style>
 </head>
 <body>
@@ -123,26 +117,10 @@ input[type=number] { width:60px; padding:6px; border-radius:6px; border:1px soli
 </div>
 
 <script>
+// Script rimane identico, nessuna modifica necessaria
 let cart=[]; let totalCash=0; let totalSatispay=0;
 function formatMoney(v){ return v.toFixed(2).replace('.',',')+' €'; }
-
-function renderCart(){
-  const cartItems=document.getElementById('cartItems'); cartItems.innerHTML='';
-  let grouped={}; cart.forEach(item=>{
-    const key=item.name+(item.meta?item.meta.join(','):'' );
-    if(grouped[key]) grouped[key].qty+=item.qty;
-    else grouped[key]={...item};
-  });
-  Object.values(grouped).forEach(item=>{
-    const div=document.createElement('div'); div.className='item-row';
-    div.innerHTML=`${item.qty} x ${item.name}${item.meta? ' ('+item.meta.join(', ')+')':''} - ${formatMoney(item.price*item.qty)}
-      <button onclick="removeItem('${item.name}','${item.meta?item.meta.join(','):""}')" class="btn" style="padding:2px 6px; margin-left:5px;">✖</button>`;
-    cartItems.appendChild(div);
-  });
-  document.getElementById('totalAmount').innerText=formatMoney(cart.reduce((a,b)=>a+b.price*b.qty,0));
-  updateReceipt();
-}
-
+function renderCart(){ const cartItems=document.getElementById('cartItems'); cartItems.innerHTML=''; let grouped={}; cart.forEach(item=>{ const key=item.name+(item.meta?item.meta.join(','):'' ); if(grouped[key]) grouped[key].qty+=item.qty; else grouped[key]={...item}; }); Object.values(grouped).forEach(item=>{ const div=document.createElement('div'); div.className='item-row'; div.innerHTML=`${item.qty} x ${item.name}${item.meta? ' ('+item.meta.join(', ')+')':''} - ${formatMoney(item.price*item.qty)}<button onclick="removeItem('${item.name}','${item.meta?item.meta.join(','):""}')" class="btn" style="padding:2px 6px; margin-left:5px;">✖</button>`; cartItems.appendChild(div); }); document.getElementById('totalAmount').innerText=formatMoney(cart.reduce((a,b)=>a+b.price*b.qty,0)); updateReceipt(); }
 function addToCart(item){ cart.push(item); renderCart(); }
 function removeItem(name,meta){ for(let i=0;i<cart.length;i++){ const item=cart[i]; if(item.name===name && ((item.meta?item.meta.join(','):'')===meta)){ cart.splice(i,1); break;} } renderCart(); }
 function clearCart(){ cart=[]; renderCart(); }
@@ -198,7 +176,7 @@ addPanBtn.addEventListener('click',()=>{
   document.querySelectorAll('#paninoOptions .chip').forEach(c=>c.classList.remove('selected'));
 });
 
-// Panino Completo (aggiunge automaticamente ingredienti standard)
+// Panino Completo
 completePanBtn.addEventListener('click',()=>{
   const qty=parseInt(document.getElementById('panQty').value);
   const meat=Array.from(document.querySelectorAll('#paninoOptions .chip[data-meat].selected')).map(x=>x.dataset.meat)[0];
@@ -286,5 +264,3 @@ document.getElementById('clearCartBtn').addEventListener('click', clearCart);
 </script>
 </body>
 </html>
-
-
