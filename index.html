@@ -15,136 +15,124 @@ body {
   padding:20px;
   -webkit-font-smoothing:antialiased;
 }
-.app {
-  display:flex;
-  flex-wrap:wrap;
-  gap:20px;
-  max-width:1400px;
-  width:100%;
-  align-items:flex-start;
-}
-.menu, .cart {
-  background:#fff;
-  border-radius:16px;
-  padding:20px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.08);
-}
+.app { display:flex; flex-wrap:wrap; gap:20px; max-width:1400px; width:100%; align-items:flex-start; }
+.menu, .cart { background:#fff; border-radius:16px; padding:20px; box-shadow:0 10px 25px rgba(0,0,0,0.08); }
 .menu { flex:1 1 650px; }
 .cart { flex:1 1 520px; display:flex; flex-direction:column; position:relative; }
 h2 { margin-top:0; color:#ff6b35; font-weight:700; font-size:1.6em; }
 .section-title { margin-top:12px; font-size:1.15em; font-weight:700; color:#333; }
-.product {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:#fafafa;
-  padding:12px;
-  margin-bottom:10px;
-  border-radius:12px;
-  border:1px solid #eee;
-}
+.product { display:flex; justify-content:space-between; align-items:center; background:#fafafa; padding:12px; margin-bottom:10px; border-radius:12px; border:1px solid #eee; }
 .product .label { display:flex; gap:8px; align-items:center; }
-.btn {
-  background:#ff6b35;
-  border:none;
-  padding:8px 12px;
-  border-radius:10px;
-  color:#fff;
-  cursor:pointer;
-  transition:transform .08s;
-  font-size:0.95em;
-}
+.btn { background:#ff6b35; border:none; padding:8px 12px; border-radius:10px; color:#fff; cursor:pointer; transition:transform .08s; font-size:0.95em; }
 .btn:active { transform: translateY(1px); }
 .btn.secondary { background:#555; }
 .btn.satispay { background:#e60019; }
 .btn.green { background:#28a745; }
-.item-row {
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:8px;
-  border-bottom:1px dashed #eee;
-  padding-bottom:6px;
-  font-size:0.95em;
-}
-.receipt, .preview {
-  background:#fafafa;
-  padding:12px;
-  border-radius:10px;
-  margin-top:12px;
-  font-family: monospace;
-  white-space: pre-wrap;
-  border:1px solid #e6e6e6;
-  word-wrap: break-word;
-  font-size:13px;
-  line-height:1.15;
-}
+.item-row { display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px dashed #eee; padding-bottom:6px; font-size:0.95em; }
+.receipt, .preview { background:#fafafa; padding:12px; border-radius:10px; margin-top:12px; font-family: monospace; white-space: pre-wrap; border:1px solid #e6e6e6; word-wrap: break-word; font-size:13px; line-height:1.15; }
 /* chips */
-.chip {
-  display:inline-block;
-  padding:6px 10px;
-  margin:4px;
-  border-radius:18px;
-  border:1px solid #ccc;
-  cursor:pointer;
-  user-select:none;
-  font-size:0.9em;
-}
+.chip { display:inline-block; padding:6px 10px; margin:4px; border-radius:18px; border:1px solid #ccc; cursor:pointer; user-select:none; font-size:0.9em; }
 .chip.selected { background:#ff6b35; color:#fff; border-color:#ff6b35; }
-
 /* keypad */
 #numPad { display:none; margin-top:10px; }
 #numPad .row { display:flex; gap:8px; justify-content:center; margin-bottom:6px; }
 #numPad button { width:60px; height:50px; border-radius:8px; border:none; background:#ff6b35; color:#fff; font-size:1.05em; cursor:pointer; }
 #numPad .btn-clear { background:#777; }
-
 /* reset column */
 .reset-section { display:flex; flex-direction:column; gap:8px; margin-top:12px; position:sticky; bottom:10px; }
 .reset-section .btn { width:100%; }
-
 /* responsive */
 @media (max-width:1024px){
   .app { flex-direction:column; align-items:center; }
   .menu, .cart { flex:1 1 100%; max-width:95%; }
 }
-
 /* -------------------- Print styles (TERMICA 58mm) -------------------- */
-@page {
-  size: 58mm auto;
-  margin: 0;
-}
+@page { size: 58mm auto; margin: 0; }
 @media print {
   body * { visibility: hidden !important; }
   #printArea, #printArea * { visibility: visible !important; }
-  #printArea {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 58mm;
-    padding: 4px;
-    margin: 0;
-    box-shadow: none;
-  }
+  #printArea { position: absolute; left: 0; top: 0; width: 58mm; padding: 4px; margin: 0; box-shadow: none; }
   pre { margin:0; }
   .no-print { display:none !important; }
 }
-#printArea .ticket {
-  width: 58mm;
-  font-family: monospace;
-  font-size:12px;
-  line-height:1.1;
-  white-space: pre-wrap;
-  color:#000;
-}
+#printArea .ticket { width: 58mm; font-family: monospace; font-size:12px; line-height:1.1; white-space: pre-wrap; color:#000; }
 </style>
-
-<!-- ==== QZ Tray Script ==== -->
-<script src="https://cdn.jsdelivr.net/npm/qz-tray@2.1.0/qz-tray.js"></script>
-
 </head>
 <body>
 <div class="app">
-  <!-- MENU e CARRELLO come prima -->
-  <!-- Copia tutto il tuo HTML precedente per menu e carrello qui, senza modifiche -->
+  <!-- MENU -->
+  <div class="menu">
+    <h2>Menu</h2>
+    <div class="section-title">☕ Colazione</div>
+    <div class="product" data-name="Caffè" data-price="1"><div class="label">Caffè — 1,00 €</div><button class="btn addBtn">Aggiungi</button></div>
+    <div class="product" data-name="Cappuccino" data-price="1.5"><div class="label">Cappuccino — 1,50 €</div><button class="btn addBtn">Aggiungi</button></div>
+    <div class="product" data-name="Brioches" data-price="1.2"><div class="label">Brioches — 1,20 €</div><button class="btn addBtn">Aggiungi</button></div>
+    <div class="section-title">🍹 Bevande e Snack</div>
+    <div class="product" data-name="Bibita" data-price="2.5"><div class="label">Bibita — 2,50 €</div><button class="btn addBtn">Aggiungi</button></div>
+    <div class="product" data-name="Birra" data-price="3"><div class="label">Birra — 3,00 €</div><button class="btn addBtn">Aggiungi</button></div>
+    <div class="section-title">🍔 Panini</div>
+    <div class="product" id="paninoRow"><div class="label">Aggiungi Panino</div><button class="btn" id="personalizzaBtn">Personalizza</button></div>
+    <div id="paninoOptions" style="display:none; margin-top:10px;">
+      <div><strong>Tipo carne:</strong></div>
+      <div>
+        <span class="chip" data-meat="Salamella">Salamella</span>
+        <span class="chip" data-meat="Wurstel">Wurstel</span>
+        <span class="chip" data-meat="Porchetta">Porchetta</span>
+      </div>
+      <div style="margin-top:8px;"><strong>Ingredienti:</strong></div>
+      <div>
+        <span class="chip" data-ing="Crauti">Crauti</span>
+        <span class="chip" data-ing="Cipolle">Cipolle</span>
+        <span class="chip" data-ing="Senape">Senape</span>
+        <span class="chip" data-ing="Maionese">Maionese</span>
+        <span class="chip" data-ing="Ketchup">Ketchup</span>
+      </div>
+      <div style="margin-top:10px;">
+        Quantità: <input type="number" id="panQty" value="1" min="1" style="width:70px; padding:6px; border-radius:6px; border:1px solid #ccc;">
+        <button class="btn" id="addPanBtn">Aggiungi Panino</button>
+        <button class="btn" id="completePanBtn">Completo</button>
+        <button class="btn" id="closePanBtn">Chiudi</button>
+      </div>
+    </div>
+    <div class="section-title" style="margin-top:12px;">✨ Extra</div>
+    <div class="product" data-name="Prodotto1" data-price="0.00"><div class="label">Prodotto 1 — 0,00 €</div><button class="btn addBtn">Aggiungi</button></div>
+    <div class="product" data-name="Prodotto2" data-price="0.00"><div class="label">Prodotto 2 — 0,00 €</div><button class="btn addBtn">Aggiungi</button></div>
+  </div>
+
+  <!-- CARRELLO -->
+  <div class="cart">
+    <h2>Carrello</h2>
+    <div id="cartItems" style="min-height:60px;"></div>
+    <div style="margin-top:10px;">
+      <strong>Totale: </strong><span id="totalAmount">0,00 €</span>
+    </div>
+    <div style="margin-top:10px;">
+      Contanti dal cliente: <input type="text" id="cashGiven" readonly style="width:130px; padding:6px; margin-left:6px;">
+      <button class="btn" id="showNumPad">Calcola resto</button>
+      <div id="numPad">
+        <div class="row"><button class="numBtn">1</button><button class="numBtn">2</button><button class="numBtn">3</button></div>
+        <div class="row"><button class="numBtn">4</button><button class="numBtn">5</button><button class="numBtn">6</button></div>
+        <div class="row"><button class="numBtn">7</button><button class="numBtn">8</button><button class="numBtn">9</button></div>
+        <div class="row"><button class="numBtn">0</button><button class="numBtn">,</button></div>
+        <div style="display:flex; gap:8px; margin-top:6px;">
+          <button class="btn btn-clear" id="numClear">C</button>
+          <button class="btn" id="numEnter">OK</button>
+        </div>
+      </div>
+      <div style="margin-top:8px;">Resto: <span id="changeAmount">0,00 €</span></div>
+    </div>
+    <div style="display:flex; gap:8px; margin-top:10px;">
+      <button class="btn" id="printBtn">💵 Paga Contanti</button>
+      <button class="btn satispay" id="paySatispay">💳 Paga Satispay</button>
+    </div>
+    <button class="btn green" id="dayTotalBtn" style="margin-top:10px;">💰 Totale Giornata</button>
+    <div class="preview receipt" id="receiptPreview">Scontrino in anteprima...</div>
+    <div class="reset-section">
+      <button class="btn" id="resetCash" style="background:#ff9900;">Reset Totale Contanti</button>
+      <button class="btn" id="resetSatispay" style="background:#9900ff;">Reset Totale Satispay</button>
+      <button class="btn secondary" id="clearCartBtn">Svuota Carrello</button>
+    </div>
+  </div>
 </div>
 
 <!-- AREA STAMPABILE (solo print) -->
@@ -159,7 +147,7 @@ let totalCash = 0;
 let totalSatispay = 0;
 function formatMoney(v){ return Number(v).toFixed(2).replace('.',',') + ' €'; }
 
-// ===================== Carrello =====================
+// ===================== Funzioni Carrello =====================
 function renderCart(){
   const cartItems = document.getElementById('cartItems');
   cartItems.innerHTML = '';
@@ -174,19 +162,23 @@ function renderCart(){
     div.className = 'item-row';
     const metaText = item.meta ? ' (' + item.meta.join(', ') + ')' : '';
     div.innerHTML = `${item.qty} x ${item.name}${metaText} <span>${formatMoney(item.price*item.qty)}</span>
-      <button class="btn" onclick="removeItemEscaped('${escapeForJS(item.name)}','${escapeForJS(item.meta?item.meta.join(','):'')}')" style="padding:4px 8px; margin-left:8px;">✖</button>`;
+    <button class="btn" onclick="removeItemEscaped('${escapeForJS(item.name)}','${escapeForJS(item.meta?item.meta.join(','):'')}')" style="padding:4px 8px; margin-left:8px;">✖</button>`;
     cartItems.appendChild(div);
   });
   const total = cart.reduce((a,b)=>a + b.price*b.qty, 0);
   document.getElementById('totalAmount').innerText = formatMoney(total);
   updateReceipt();
 }
-
 function escapeForJS(s){ if(!s) return ''; return s.replace(/'/g,"\\'").replace(/"/g,'\\"'); }
 function addToCart(item){ cart.push(item); renderCart(); }
 function removeItemEscaped(name, meta){
-  name = name.replace(/\\'/g,"'").replace(/\\"/g,'"'); meta = meta.replace(/\\'/g,"'").replace(/\\"/g,'"');
-  for(let i=0;i<cart.length;i++){ const itm=cart[i]; const keyMeta=itm.meta?itm.meta.join(','):''; if(itm.name===name&&keyMeta===meta){cart.splice(i,1); break;} }
+  name = name.replace(/\\'/g,"'").replace(/\\"/g,'"');
+  meta = meta.replace(/\\'/g,"'").replace(/\\"/g,'"');
+  for(let i=0;i<cart.length;i++){
+    const itm=cart[i];
+    const keyMeta=itm.meta?itm.meta.join(','):'';
+    if(itm.name===name&&keyMeta===meta){cart.splice(i,1); break;}
+  }
   renderCart();
 }
 function clearCart(){ cart=[]; renderCart(); }
@@ -198,13 +190,18 @@ function buildTicketText(metodo){
   lines.push('📍 Cuneo, Piccapietra');
   lines.push('-----------------------------');
   const grouped={};
-  cart.forEach(item=>{ const key=item.name+(item.meta? '|'+item.meta.join(','):''); if(grouped[key]) grouped[key].qty+=item.qty; else grouped[key]=Object.assign({},item); });
+  cart.forEach(item=>{
+    const key=item.name+(item.meta? '|'+item.meta.join(','):'');
+    if(grouped[key]) grouped[key].qty+=item.qty;
+    else grouped[key]=Object.assign({},item);
+  });
   Object.values(grouped).forEach(item=>{
     const qty=item.qty;
     const name=item.name;
-    lines.push(qty+' x '+name);
-    if(item.meta) lines.push('  '+item.meta.join(', '));
-    lines.push('  '+formatMoney(item.price*item.qty));
+    if(name.toLowerCase().includes('birra')&&qty>=10) lines.push(qty+' x '+name+' (cumulabili)');
+    else lines.push(qty+' x '+name);
+    if(item.meta) lines.push(' '+item.meta.join(', '));
+    lines.push(' '+formatMoney(item.price*item.qty));
   });
   const total=cart.reduce((a,b)=>a+b.price*b.qty,0);
   lines.push('-----------------------------');
@@ -212,12 +209,12 @@ function buildTicketText(metodo){
   lines.push('Pagamento: '+(metodo||'').toUpperCase());
   lines.push('');
   lines.push('Grazie e Buon Torneo!');
-  lines.push('\x1B\x40'); // ESC @ = reset stampante
-  lines.push('\x1D\x56\x41'); // Taglio carta
-  lines.push('\n\n\n'); // righe extra
+  // ===================== RESET buffer stampante =====================
+  lines.push('\x1B\x40'); // ESC @ = reset completo stampante
+  lines.push('\x1D\x56\x41'); // taglio carta completo
+  lines.push('\n\n\n'); // righe extra per cutter
   return lines.join('\n');
 }
-
 function updateReceipt(){
   const preview=document.getElementById('receiptPreview');
   const ticketContent=document.getElementById('ticketContent');
@@ -226,46 +223,100 @@ function updateReceipt(){
   ticketContent.innerText=text;
 }
 
-// ===================== QZ Tray Print =====================
+// ===================== Stampa =====================
+/*
+UTILIZZO SU TABLET E STAMPANTE USB:
+- Il tablet apre il sito via browser collegato al PC (stesso Wi-Fi)
+- Il PC deve avere QZ Tray installato e avviato
+- La stampante deve essere USB sul PC e visibile in QZ Tray
+- Cliccando "Paga Contanti" o "Paga Satispay":
+    1. Si genera il testo dello scontrino
+    2. Si invia a window.print() → QZ Tray intercetta e stampa
+    3. Carrello si resetta automaticamente
+- Non serve USB tra tablet e stampante, tutto passa dal PC
+*/
 function printReceipt(metodo){
   if(cart.length===0){ alert('Il carrello è vuoto!'); return; }
-  const text = buildTicketText(metodo);
-
-  // Connessione QZ Tray
-  qz.websocket.connect().then(()=>{
-    return qz.printers.find().then(printer => {
-      console.log('Stampante trovata: ', printer);
-      const config = qz.configs.create(printer);
-      return qz.print(config, [{ type: 'raw', format: 'plain', data: text }]);
-    });
-  }).catch(err=>{
-    console.error(err);
-    alert('Errore stampa: '+err);
-  }).finally(()=>{
-    qz.websocket.disconnect();
-  });
-
-  // Aggiorna totali
+  const ticketContent=document.getElementById('ticketContent');
+  const text=buildTicketText(metodo);
+  ticketContent.innerText=text;
+  document.getElementById('receiptPreview').innerText=text;
   const total=cart.reduce((a,b)=>a+b.price*b.qty,0);
-  if(metodo==='contanti') totalCash+=total; else if(metodo==='satispay') totalSatispay+=total;
-
-  // Reset carrello
+  if(metodo==='contanti') totalCash+=total;
+  else if(metodo==='satispay') totalSatispay+=total;
+  setTimeout(()=>{ window.print(); }, 100);
   cart=[]; renderCart();
   document.getElementById('cashGiven').value='';
   document.getElementById('changeAmount').innerText=formatMoney(0);
 }
 
 // ===================== Eventi UI =====================
-// Copia tutti gli event listener dal tuo file originale, solo modifica quelli dei pulsanti di pagamento:
+// ... gestioni panini, numPad, add/remove carrello rimangono identiche ...
+// gestione bottoni Paga, Totale Giornata, Reset PIN, Svuota Carrello
+document.querySelectorAll('.addBtn').forEach(btn=>{ btn.addEventListener('click', e=>{ const prod=e.target.closest('.product'); const name=prod.dataset.name; const price=parseFloat(prod.dataset.price)||0; addToCart({name:name, price:price, qty:1}); }); });
+// gestione panini personalizzati
+const personalizzaBtn=document.getElementById('personalizzaBtn');
+const panOptions=document.getElementById('paninoOptions');
+const addPanBtn=document.getElementById('addPanBtn');
+const closePanBtn=document.getElementById('closePanBtn');
+const completePanBtn=document.getElementById('completePanBtn');
+personalizzaBtn.addEventListener('click', ()=>{ panOptions.style.display='block'; });
+closePanBtn.addEventListener('click', ()=>{ panOptions.style.display='none'; });
+addPanBtn.addEventListener('click', ()=>{
+  const qty=parseInt(document.getElementById('panQty').value)||1;
+  const meat=Array.from(document.querySelectorAll('#paninoOptions .chip[data-meat].selected')).map(x=>x.dataset.meat)[0];
+  if(!meat){ alert('Seleziona il tipo di carne!'); return; }
+  const ingredients=Array.from(document.querySelectorAll('#paninoOptions .chip[data-ing].selected')).map(x=>x.dataset.ing);
+  addToCart({name:'Panino '+meat, price:6, qty:qty, meta:ingredients.length?ingredients:null});
+  panOptions.style.display='none';
+  document.getElementById('panQty').value=1;
+  document.querySelectorAll('#paninoOptions .chip').forEach(c=>c.classList.remove('selected'));
+});
+completePanBtn.addEventListener('click', ()=>{
+  const qty=parseInt(document.getElementById('panQty').value)||1;
+  const meat=Array.from(document.querySelectorAll('#paninoOptions .chip[data-meat].selected')).map(x=>x.dataset.meat)[0];
+  if(!meat){ alert('Seleziona il tipo di carne!'); return; }
+  let ingredients=[];
+  if(meat==="Salamella") ingredients=["Crauti","Senape"];
+  else if(meat==="Wurstel") ingredients=["Ketchup","Senape"];
+  else if(meat==="Porchetta") ingredients=["Cipolle","Maionese"];
+  addToCart({name:'Panino '+meat+' (Completo)', price:6, qty:qty, meta:ingredients});
+  panOptions.style.display='none';
+  document.getElementById('panQty').value=1;
+  document.querySelectorAll('#paninoOptions .chip').forEach(c=>c.classList.remove('selected'));
+});
+document.querySelectorAll('#paninoOptions .chip').forEach(c=>{
+  c.addEventListener('click', ()=>{
+    if(c.dataset.meat){ document.querySelectorAll('#paninoOptions .chip[data-meat]').forEach(x=>x.classList.remove('selected')); c.classList.add('selected'); }
+    else { c.classList.toggle('selected'); }
+  });
+});
+const numPad=document.getElementById('numPad');
+const cashInput=document.getElementById('cashGiven');
+document.getElementById('showNumPad').addEventListener('click', ()=>{ numPad.style.display=numPad.style.display==='block'?'none':'block'; });
+document.querySelectorAll('.numBtn').forEach(btn=>{ btn.addEventListener('click', ()=>{ cashInput.value=(cashInput.value||'')+(btn.innerText===','?'.':btn.innerText); }); });
+document.getElementById('numClear').addEventListener('click', ()=>{ cashInput.value=''; });
+document.getElementById('numEnter').addEventListener('click', ()=>{
+  numPad.style.display='none';
+  const cash=parseFloat((cashInput.value||'').replace(',','.'))||0;
+  const total=cart.reduce((a,b)=>a+b.price*b.qty,0);
+  const change=Math.round((cash-total)*100)/100;
+  if(change<0){ alert('Soldi insufficienti!'); return; }
+  document.getElementById('changeAmount').innerText=formatMoney(change);
+});
 document.getElementById('printBtn').addEventListener('click', ()=>{ printReceipt('contanti'); });
 document.getElementById('paySatispay').addEventListener('click', ()=>{ printReceipt('satispay'); });
-
-// Tutti gli altri event listener (panini, numPad, reset, etc.) rimangono identici come nel tuo file originale
-
+document.getElementById('dayTotalBtn').addEventListener('click', ()=>{ alert('Totale Contanti: '+formatMoney(totalCash)+'\nTotale Satispay: '+formatMoney(totalSatispay)); });
+function askPin(callback){ const pin=prompt("Inserisci PIN per confermare il reset:"); if(pin==="1234") callback(); else alert("PIN errato!"); }
+document.getElementById('resetCash').addEventListener('click', ()=>{ askPin(()=>{ totalCash=0; alert('Totale contanti azzerato'); }); });
+document.getElementById('resetSatispay').addEventListener('click', ()=>{ askPin(()=>{ totalSatispay=0; alert('Totale Satispay azzerato'); }); });
+document.getElementById('clearCartBtn').addEventListener('click', ()=>{ clearCart(); });
 renderCart();
 </script>
 </body>
 </html>
+
+
 
 
 
