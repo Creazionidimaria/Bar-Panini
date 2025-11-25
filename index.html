@@ -140,6 +140,9 @@ h2 { margin-top:0; color:#ff6b35; font-weight:700; font-size:1.6em; }
   <div class="ticket" id="ticketContent"></div>
 </div>
 
+<!-- QZ Tray -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qz-tray/2.1.0/qz-tray.js"></script>
+
 <script>
 // ===================== Dati =====================
 let cart = [];
@@ -147,7 +150,7 @@ let totalCash = 0;
 let totalSatispay = 0;
 function formatMoney(v){ return Number(v).toFixed(2).replace('.',',') + ' €'; }
 
-// ===================== Funzioni Carrello =====================
+// ===================== Carrello =====================
 function renderCart(){
   const cartItems = document.getElementById('cartItems');
   cartItems.innerHTML = '';
@@ -209,10 +212,10 @@ function buildTicketText(metodo){
   lines.push('Pagamento: '+(metodo||'').toUpperCase());
   lines.push('');
   lines.push('Grazie e Buon Torneo!');
-  // ===================== RESET buffer stampante =====================
-  lines.push('\x1B\x40'); // ESC @ = reset completo stampante
-  lines.push('\x1D\x56\x41'); // taglio carta completo
-  lines.push('\n\n\n'); // righe extra per cutter
+  // ESC/POS reset e taglio carta
+  lines.push('\x1B\x40');
+  lines.push('\x1D\x56\x41');
+  lines.push('\n\n\n');
   return lines.join('\n');
 }
 function updateReceipt(){
@@ -223,37 +226,35 @@ function updateReceipt(){
   ticketContent.innerText=text;
 }
 
-// ===================== Stampa =====================
-/*
-UTILIZZO SU TABLET E STAMPANTE USB:
-- Il tablet apre il sito via browser collegato al PC (stesso Wi-Fi)
-- Il PC deve avere QZ Tray installato e avviato
-- La stampante deve essere USB sul PC e visibile in QZ Tray
-- Cliccando "Paga Contanti" o "Paga Satispay":
-    1. Si genera il testo dello scontrino
-    2. Si invia a window.print() → QZ Tray intercetta e stampa
-    3. Carrello si resetta automaticamente
-- Non serve USB tra tablet e stampante, tutto passa dal PC
-*/
+// ===================== Stampa con QZ Tray =====================
 function printReceipt(metodo){
   if(cart.length===0){ alert('Il carrello è vuoto!'); return; }
-  const ticketContent=document.getElementById('ticketContent');
   const text=buildTicketText(metodo);
-  ticketContent.innerText=text;
-  document.getElementById('receiptPreview').innerText=text;
   const total=cart.reduce((a,b)=>a+b.price*b.qty,0);
   if(metodo==='contanti') totalCash+=total;
   else if(metodo==='satispay') totalSatispay+=total;
-  setTimeout(()=>{ window.print(); }, 100);
+
+  // Configura QZ Tray
+  qz.websocket.connect().then(()=>{
+    return qz.printers.find().then(printer=>{
+      const config = qz.configs.create(printer);
+      return qz.print(config, [{ type:'raw', format:'plain', data:text }]);
+    });
+  }).catch(err=>{
+    alert('Errore stampa: '+err);
+  });
+
   cart=[]; renderCart();
   document.getElementById('cashGiven').value='';
   document.getElementById('changeAmount').innerText=formatMoney(0);
 }
 
 // ===================== Eventi UI =====================
-// ... gestioni panini, numPad, add/remove carrello rimangono identiche ...
-// gestione bottoni Paga, Totale Giornata, Reset PIN, Svuota Carrello
-document.querySelectorAll('.addBtn').forEach(btn=>{ btn.addEventListener('click', e=>{ const prod=e.target.closest('.product'); const name=prod.dataset.name; const price=parseFloat(prod.dataset.price)||0; addToCart({name:name, price:price, qty:1}); }); });
+document.querySelectorAll('.addBtn').forEach(btn=>{ btn.addEventListener('click', e=>{
+  const prod=e.target.closest('.product'); const name=prod.dataset.name;
+  const price=parseFloat(prod.dataset.price)||0; addToCart({name:name, price:price, qty:1});
+}); });
+
 // gestione panini personalizzati
 const personalizzaBtn=document.getElementById('personalizzaBtn');
 const panOptions=document.getElementById('paninoOptions');
@@ -291,6 +292,8 @@ document.querySelectorAll('#paninoOptions .chip').forEach(c=>{
     else { c.classList.toggle('selected'); }
   });
 });
+
+// keypad
 const numPad=document.getElementById('numPad');
 const cashInput=document.getElementById('cashGiven');
 document.getElementById('showNumPad').addEventListener('click', ()=>{ numPad.style.display=numPad.style.display==='block'?'none':'block'; });
@@ -304,6 +307,7 @@ document.getElementById('numEnter').addEventListener('click', ()=>{
   if(change<0){ alert('Soldi insufficienti!'); return; }
   document.getElementById('changeAmount').innerText=formatMoney(change);
 });
+
 document.getElementById('printBtn').addEventListener('click', ()=>{ printReceipt('contanti'); });
 document.getElementById('paySatispay').addEventListener('click', ()=>{ printReceipt('satispay'); });
 document.getElementById('dayTotalBtn').addEventListener('click', ()=>{ alert('Totale Contanti: '+formatMoney(totalCash)+'\nTotale Satispay: '+formatMoney(totalSatispay)); });
@@ -311,13 +315,8 @@ function askPin(callback){ const pin=prompt("Inserisci PIN per confermare il res
 document.getElementById('resetCash').addEventListener('click', ()=>{ askPin(()=>{ totalCash=0; alert('Totale contanti azzerato'); }); });
 document.getElementById('resetSatispay').addEventListener('click', ()=>{ askPin(()=>{ totalSatispay=0; alert('Totale Satispay azzerato'); }); });
 document.getElementById('clearCartBtn').addEventListener('click', ()=>{ clearCart(); });
+
 renderCart();
 </script>
 </body>
 </html>
-
-
-
-
-
-
